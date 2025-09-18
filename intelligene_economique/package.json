@@ -1,0 +1,50 @@
+{
+  "name": "intelligene_economique",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "export": "next export",
+    "deploy:hostinger": "npm run build && npm run upload",
+    "upload": "node scripts/upload-hostinger.js",
+    "backup": "node scripts/backup.bat",
+    "restore": "node scripts/restore.sh",
+    "health-check": "node scripts/health-check.js",
+    "lint": "eslint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:seed": "prisma db seed",
+    "db:push": "prisma db push",
+    "prisma:deploy": "prisma migrate deploy",
+    "hostinger:setup": "prisma db push && echo 'Base MySQL configurée pour Hostinger'",
+    "hostinger:migrate": "prisma migrate deploy",
+    "test:database": "node scripts/test-database.js",
+    "verify:integration": "node scripts/verify-integration.js"
+  },
+  "prisma": {
+    "seed": "node ./prisma/seed.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.15.0",
+    "mysql2": "^3.14.5",
+    "next": "15.5.2",
+    "node-fetch": "^3.3.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.2",
+    "ftp": "^0.3.10",
+    "prisma": "^6.15.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

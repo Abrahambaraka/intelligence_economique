@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  /* Brand colors (Jeune Afrique red) */
+  --brand-600: #e10600;
+  --brand-700: #c10500;
+}
+
+/* Tailwind utilities are imported above; custom vars live in :root */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+  /* Keep body background white even in dark mode as requested */
+  --background: #ffffff;
+  --foreground: #171717;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  color: var(--foreground);
+  /* Police principale du corps: PT Sans */
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  /* Solid page background for a clean look */
+}
+
+/* Titres en sérif (proche Joyeux Serif) */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif), Georgia, "Times New Roman", Times, serif;
+}
+
+/* Default link colors remain neutral; brand red is applied contextually via classes */
+
+/* Selection highlight in brand color */
+::selection {
+  background: var(--brand-600);
+  color: #fff;
+}
+
+/* Typography enhancements for special characters */
+.font-feature-default {
+  font-feature-settings: "liga" on, "kern" on, "calt" on;
+  font-variant-ligatures: common-ligatures;
+  text-rendering: optimizeLegibility;
+}
+
+/* Ensure proper character encoding for French text */
+.article-content {
+  unicode-bidi: embed;
+  direction: ltr;
+}

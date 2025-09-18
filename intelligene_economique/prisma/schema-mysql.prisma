@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  draft
+  published
+  archived
+}
+
+model Rubrique {
+  slug   String  @id
+  label  String
+  // relations
+  articles Article[]
+}
+
+model Article {
+  id           String    @id @default(uuid())
+  title        String
+  slug         String    @unique
+  excerpt      String?
+  body         String    @db.Text
+  image        String?
+  publishedAt  DateTime?
+  author       String?
+  status       Status    @default(published)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  rubriqueSlug String?
+  rubrique     Rubrique? @relation(fields: [rubriqueSlug], references: [slug], onDelete: SetNull)
+
+  // relations
+  tags         ArticleTag[] @relation("ArticleTags")
+
+  @@index([rubriqueSlug])
+  @@index([publishedAt])
+}
+
+model Tag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  slug String @unique
+  // relations
+  articles ArticleTag[] @relation("ArticleTags")
+}
+
+model ArticleTag {
+  id        Int     @id @default(autoincrement())
+  articleId String
+  tagId     Int
+  // relations
+  article   Article @relation("ArticleTags", fields: [articleId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation("ArticleTags", fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([articleId, tagId])
+}
+
+model Magazine {
+  id          String    @id @default(uuid())
+  title       String
+  issueNumber Int?
+  slug        String    @unique
+  description String?   @db.Text
+  coverImage  String?
+  pdfUrl      String?
+  publishedAt DateTime?
+  status      Status    @default(published)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([publishedAt])
+}
+
+model Video {
+  id          String    @id @default(uuid())
+  title       String
+  slug        String    @unique
+  description String?   @db.Text
+  videoUrl    String
+  thumbnail   String?
+  duration    Int?
+  publishedAt DateTime?
+  status      Status    @default(published)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([publishedAt])
+}
+
+model NewsletterSubscription {
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
+  createdAt  DateTime  @default(now())
+  confirmedAt DateTime?
+  source     String?
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+}

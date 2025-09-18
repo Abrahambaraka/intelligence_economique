@@ -1,0 +1,9 @@
+node_modules
+.next/cache
+.next/standalone
+.git
+.gitignore
+Dockerfile
+.env
+*.local
+prisma/dev.db

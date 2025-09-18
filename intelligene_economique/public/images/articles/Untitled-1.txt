@@ -1,0 +1,27 @@
+import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
+void main() => runApp(const IEViewer());
+
+class IEViewer extends StatelessWidget {
+  const IEViewer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Use your LAN IP from Option A
+    const url = 'http://192.168.1.23:3000';
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(title: const Text('Intelligence Économique')),
+          body: const WebView(
+            initialUrl: url,
+            javascriptMode: JavascriptMode.unrestricted,
+            gestureNavigationEnabled: true,
+          ),
+        ),
+      ),
+    );
+  }
+}

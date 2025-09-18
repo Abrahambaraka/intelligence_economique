@@ -1,0 +1,79 @@
+Intelligence Économique — Description du fonctionnement
+
+Aperçu
+- Application web type magazine inspirée de « Jeune Afrique ».
+- Stack: Next.js (App Router) 15, React 19, TypeScript, Tailwind CSS 4.
+- Base de données: Prisma + SQLite (fichier dev.db). Client Prisma pour l’accès.
+- Authentification légère par cookie signé (HMAC) pour protéger /publier.
+- Héberge articles, magazines (avec PDF) et vidéos, plus une newsletter.
+
+Structure principale
+- Pages publiques: page d’accueil, rubriques, article, magazines, vidéos, recherche.
+- Page d’administration: /publier (création + édition + suppression de contenus).
+- Middleware: bloque /publier si l’utilisateur n’a pas de session admin.
+- API REST: /api/articles, /api/magazines, /api/videos, /api/upload, /api/newsletter, /api/auth/*.
+- Icônes: favicon et PWA via /images/IE.png (déclaré dans metadata.icons et site.webmanifest).
+- Polices: PT Sans (corps), Source Serif 4 (titres).
+
+Données et schéma (Prisma)
+- Modèles: Rubrique, Article, Tag, ArticleTag (N-N), Magazine, Video, NewsletterSubscription, User.
+- Enum Status: draft | published | archived.
+- Articles: titre, slug unique, extrait, corps, image, rubrique, dates; index sur publishedAt.
+- Magazines: titre, slug unique, numéro (issue), image, pdfUrl, statut, dates.
+- Vidéos: titre, slug unique, image, videoUrl, durée, statut, dates.
+- NewsletterSubscription: email unique, dates; User: email unique, hash du mot de passe, rôle.
+
+API (exemples)
+- GET /api/articles?rubrique=slug&status=published: liste filtrée (ordre par publishedAt desc).
+- POST /api/articles { title, excerpt?, body, image?, rubrique }: crée et publie un article (slug unique).
+- PATCH /api/articles/[id], DELETE /api/articles/[id]: mise à jour / suppression.
+- Idem pour /api/magazines et /api/videos.
+- POST /api/upload: enregistre un fichier dans public/uploads (réservé admin via cookie HMAC).
+- GET/POST /api/newsletter: mini page d’inscription + endpoint JSON (anti-spam « honeypot »).
+
+Administration (/publier)
+- Onglets Article / Magazine / Vidéo.
+- Création: formulaires simples avec upload d’image; magazine: upload ou lien PDF.
+- Liste des éléments publiés par type, avec boutons Modifier / Retirer.
+- Édition inline: patch via API, mise à jour immédiate de l’UI.
+
+Sécurité minimale
+- Cookie signé "ie_session" (HMAC SHA-256) vérifié côté middleware et pour l’upload.
+- Redirection vers /admin si non authentifié.
+
+Identité visuelle
+- Titres en sérif (Source Serif 4), corps en sans-sérif (PT Sans).
+- Favicon et icônes: /public/images/IE.png (multi-tailles via metadata.icons et site.webmanifest).
+
+Démarrage et scripts
+1) Installation des dépendances
+   - npm install
+2) Base de données (développement)
+   - npm run prisma:generate
+   - npm run db:push   (ou npm run prisma:migrate pour migrations)
+   - npm run prisma:seed (facultatif si un seed existe)
+3) Lancer le serveur
+   - npm run dev
+   Le serveur écoute par défaut sur http://localhost:3000 (ou port de repli comme 3002 si occupé).
+4) Build et production
+   - npm run build
+   - npm run start
+
+Notes
+- Les icônes sont déclarées dans src/app/layout.tsx via metadata.icons et dans public/site.webmanifest.
+- Les fichiers téléchargés vont dans public/uploads (servis statiquement par Next.js).
+- La recherche est en cours d’unification vers Prisma (si vous voyez encore des données mockées).
+- Pour changer le favicon, remplacez /public/images/IE.png et incrémentez le paramètre ?v= dans layout.tsx et site.webmanifest.
+
+Rubriques (libellés affichés)
+- NOTE D’INFORMATION
+- ENQUÊTES & INVESTIGATIONS
+- ANALYSE DES SITUATIONS
+- FLASH NOTE
+- DECOUVERTE
+- INTERVIEW
+- PLAIDOYER
+- TRIBUNE
+
+Base de données
+- La seed Prisma a été exécutée pour synchroniser ces rubriques en base (voir `prisma/seed.js`). Si vous utilisez SQLite pour le développement, les modifications sont appliquées automatiquement; en production, appliquez vos migrations et exécutez la seed si nécessaire.

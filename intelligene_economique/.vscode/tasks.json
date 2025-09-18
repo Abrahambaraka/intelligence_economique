@@ -1,0 +1,77 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Prisma: generate client",
+			"type": "shell",
+			"command": "npx prisma generate",
+			"args": []
+		},
+		{
+			"label": "Prisma: generate client",
+			"type": "shell",
+			"command": "npx prisma generate",
+			"args": []
+		},
+		{
+			"label": "Prisma: db push",
+			"type": "shell",
+			"command": "npx prisma db push",
+			"args": []
+		},
+		{
+			"label": "Prisma: seed",
+			"type": "shell",
+			"command": "npx prisma db seed",
+			"args": []
+		},
+		{
+			"label": "Build quick typecheck",
+			"type": "shell",
+			"command": "npx tsc -p . --noEmit",
+			"args": []
+		},
+		{
+			"label": "Typecheck",
+			"type": "shell",
+			"command": "npx tsc -p . --noEmit",
+			"args": []
+		},
+		{
+			"label": "Typecheck again",
+			"type": "shell",
+			"command": "npx tsc -p . --noEmit",
+			"args": []
+		},
+		{
+			"label": "Typecheck (quick)",
+			"type": "shell",
+			"command": "npx tsc -p . --noEmit"
+		},
+		{
+			"label": "Prisma: seed",
+			"type": "shell",
+			"command": "npx prisma db seed"
+		},
+		{
+			"label": "Typecheck",
+			"type": "shell",
+			"command": "npx tsc -p . --noEmit"
+		},
+		{
+			"label": "Typecheck",
+			"type": "shell",
+			"command": "npx tsc -p . --noEmit"
+		},
+		{
+			"label": "Start Next.js production server",
+			"type": "shell",
+			"command": "npm run start",
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build"
+		}
+	]
+}
