@@ -45,6 +45,7 @@ export default function NavBar() {
   const lastYRef = useRef(0);
   const onAdmin = pathname?.startsWith("/admin");
   const onPublier = pathname?.startsWith("/publier");
+  
   const focusMobileSearch = () => {
     setOpen(true);
     // Met le focus sur la recherche mobile quand le tiroir s'ouvre
@@ -59,6 +60,12 @@ export default function NavBar() {
       if (!open) return;
       if (!menuRef.current) return;
       const target = e.target as Node;
+      
+      // Sur mobile, on ne ferme pas automatiquement sur mousedown
+      // pour éviter les conflits avec les liens
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) return;
+      
       if (target && !menuRef.current.contains(target)) setOpen(false);
     }
     function onKey(e: KeyboardEvent) {
@@ -293,15 +300,20 @@ export default function NavBar() {
           <div
             className="fixed inset-0 z-40 bg-black/30 backdrop-blur-[2px] md:hidden"
             aria-hidden="true"
-            onClick={() => setOpen(false)}
+            onClick={(e) => {
+              // S'assurer qu'on clique bien sur le voile et pas sur un élément enfant
+              if (e.target === e.currentTarget) {
+                setOpen(false);
+              }
+            }}
           />
           {/* Panneau */}
-          <div className="md:hidden fixed left-0 top-[env(safe-area-inset-top,0px)] z-50 w-[50%] max-w-xs bg-white animate-in slide-in-from-top-2 transform">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
+          <div className="md:hidden fixed left-0 top-[env(safe-area-inset-top,0px)] z-50 w-[75%] max-w-md bg-white animate-in slide-in-from-top-2 transform">
+            <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-8 py-4">
               {/* Barre du tiroir */}
-              <div className="mb-3 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between">
                 <div className="h-1.5 w-12 rounded-full bg-neutral-200 mx-auto absolute left-1/2 -translate-x-1/2 -top-2" aria-hidden="true" />
-                <h2 className="text-xs font-semibold text-neutral-900">Menu</h2>
+                <h2 className="text-sm font-semibold text-neutral-900">Menu</h2>
                 <button
                   onClick={() => setOpen(false)}
                   aria-label="Fermer"
@@ -313,29 +325,33 @@ export default function NavBar() {
                 </button>
               </div>
               {/* Recherche mobile */}
-              <form action="/recherche" method="get" className="mb-3 flex items-center gap-2">
+              <form action="/recherche" method="get" className="mb-4 flex items-center gap-2">
                 <input
                   type="search"
                   name="q"
                   placeholder="Rechercher..."
-                  className="w-full rounded-md border border-neutral-300 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-neutral-900 text-neutral-900 placeholder:text-neutral-900"
+                  className="w-full rounded-md border border-neutral-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900 text-neutral-900 placeholder:text-neutral-500"
                 />
-                <button className="rounded-md px-3 py-2 text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800">OK</button>
+                <button className="rounded-md px-4 py-3 text-sm font-medium text-white bg-neutral-900 hover:bg-neutral-800">OK</button>
               </form>
               {/* Liens rapides */}
-              <div className="grid gap-2">
+              <div className="grid gap-3">
                 {links.map((l) => (
                   <Link
                     key={l.href}
                     href={l.href}
-                    className="text-xs font-medium text-neutral-900 hover:text-[var(--brand-600)]"
-                    onClick={() => setOpen(false)}
+                    className="text-sm font-medium text-neutral-900 hover:text-[var(--brand-600)] py-1"
+                    onClick={() => {
+                      // Laisser Next.js gérer la navigation naturellement
+                      // Fermer le menu après un délai pour que la navigation s'effectue
+                      setTimeout(() => setOpen(false), 100);
+                    }}
                   >
-                    <span className="inline-flex items-center gap-2">
+                    <span className="inline-flex items-center gap-3">
                       {l.href === "/magazines" && (
                         <svg
-                          width="18"
-                          height="18"
+                          width="20"
+                          height="20"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
@@ -354,14 +370,18 @@ export default function NavBar() {
                 ))}
               </div>
               {/* Rubriques */}
-              <div className="mt-2.5">
+              <div className="mt-4">
                 <div className="divide-y divide-neutral-200">
                   {RUBRIQUES.map((r) => (
                     <Link
                       key={r.slug}
                       href={`/rubrique/${r.slug}`}
-          className="block px-2 py-1.5 text-[11px] text-neutral-900 hover:bg-neutral-50 hover:text-[var(--brand-600)] uppercase leading-tight"
-                      onClick={() => setOpen(false)}
+          className="block px-3 py-3 text-sm text-neutral-900 hover:bg-neutral-50 hover:text-[var(--brand-600)] uppercase leading-relaxed font-medium"
+                      onClick={() => {
+                        // Laisser Next.js gérer la navigation naturellement
+                        // Fermer le menu après un délai pour que la navigation s'effectue
+                        setTimeout(() => setOpen(false), 100);
+                      }}
                     >
                       {(() => { const [l1, l2] = splitRubrique(r.label); return (<><span className="block">{l1}</span>{l2 && <span className="block">{l2}</span>}</>); })()}
                     </Link>
@@ -369,11 +389,11 @@ export default function NavBar() {
                 </div>
               </div>
               {/* Auth */}
-              <div className="mt-5">
+              <div className="mt-6">
                 {onPublier ? (
                   <form action="/api/auth/logout" method="post">
-                    <button className="w-full inline-flex items-center justify-center gap-2 h-9 rounded-md border text-xs font-medium border-[var(--brand-600)] text-[var(--brand-600)] hover:bg-[var(--brand-600)] hover:text-white focus:outline-none focus:ring-2 focus:ring-[var(--brand-600)]" title="Se déconnecter">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <button className="w-full inline-flex items-center justify-center gap-2 h-11 rounded-md border text-sm font-medium border-[var(--brand-600)] text-[var(--brand-600)] hover:bg-[var(--brand-600)] hover:text-white focus:outline-none focus:ring-2 focus:ring-[var(--brand-600)]" title="Se déconnecter">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                         <path d="M16 17l5-5-5-5" />
                         <path d="M21 12H9" />
@@ -382,8 +402,8 @@ export default function NavBar() {
                     </button>
                   </form>
                 ) : (
-                  <a href="#" onClick={(e) => { e.preventDefault(); setAuthOpen(true); }} className="w-full inline-flex items-center justify-center gap-2 h-9 rounded-md border border-neutral-300 text-neutral-900 hover:border-neutral-900 text-xs" role="button">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <a href="#" onClick={(e) => { e.preventDefault(); setAuthOpen(true); }} className="w-full inline-flex items-center justify-center gap-2 h-11 rounded-md border border-neutral-300 text-neutral-900 hover:border-neutral-900 text-sm" role="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <circle cx="12" cy="8" r="4" />
                       <path d="M20 21a8 8 0 1 0-16 0" />
                     </svg>

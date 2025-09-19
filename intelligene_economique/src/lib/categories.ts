@@ -1,13 +1,13 @@
 export type Rubrique = { slug: string; label: string };
 
 export const RUBRIQUES: Rubrique[] = [
-  { slug: "mines-petrole-gaz", label: "NOTE D’INFORMATION" },
-  { slug: "economie-finance", label: "ENQUÊTES & INVESTIGATIONS" },
-  { slug: "actualite-societe", label: "ANALYSE DES SITUATIONS" },
-  { slug: "environnement-energie", label: "FLASH NOTE" },
-  { slug: "communication-information", label: "DECOUVERTE" },
-  { slug: "batiment-travaux", label: "INTERVIEW" },
-  { slug: "entreprise-entreprenariat", label: "PLAIDOYER" },
+  { slug: "note-information", label: "NOTE D'INFORMATION" },
+  { slug: "enquetes-investigations", label: "ENQUÊTES & INVESTIGATIONS" },
+  { slug: "analyse-situations", label: "ANALYSE DES SITUATIONS" },
+  { slug: "flash-note", label: "FLASH NOTE" },
+  { slug: "decouverte", label: "DECOUVERTE" },
+  { slug: "interview", label: "INTERVIEW" },
+  { slug: "plaidoyer", label: "PLAIDOYER" },
   { slug: "tribune", label: "TRIBUNE" },
 ];
 

@@ -11,7 +11,7 @@ export const articles: Article[] = [
     publishedAt: "2025-08-20",
     author: "Rédaction IE",
     tags: ["Investissement", "Afrique", "Marchés"],
-  rubrique: "economie-finance", // Utilise le slug de rubrique cohérent
+  rubrique: "enquetes-investigations", // Utilise le slug de rubrique cohérent
     body:
       "Contenu de l'article fictif. Développer ultérieurement avec un CMS ou Markdown.",
   },
@@ -24,7 +24,7 @@ export const articles: Article[] = [
     publishedAt: "2025-08-18",
     author: "Rédaction IE",
     tags: ["Énergie", "GNL"],
-  rubrique: "environnement-energie", // Utilise le slug de rubrique cohérent
+  rubrique: "flash-note", // Utilise le slug de rubrique cohérent
     body: "Contenu d'exemple.",
   },
   {
@@ -36,7 +36,7 @@ export const articles: Article[] = [
     publishedAt: "2025-08-15",
     author: "Rédaction IE",
     tags: ["Banque", "Finance"],
-  rubrique: "economie-finance", // Utilise le slug de rubrique cohérent
+  rubrique: "enquetes-investigations", // Utilise le slug de rubrique cohérent
     body: "Contenu d'exemple.",
   },
   {
@@ -48,7 +48,7 @@ export const articles: Article[] = [
     publishedAt: "2025-08-12",
     author: "Rédaction IE",
     tags: ["Télécoms", "5G"],
-  rubrique: "communication-information", // Utilise le slug de rubrique cohérent
+  rubrique: "decouverte", // Utilise le slug de rubrique cohérent
     body: "Contenu d'exemple.",
   },
   {
@@ -60,7 +60,7 @@ export const articles: Article[] = [
     publishedAt: "2025-08-09",
     author: "Rédaction IE",
     tags: ["Mines", "Matières premières"],
-  rubrique: "mines-petrole-gaz", // Utilise le slug de rubrique cohérent
+  rubrique: "note-information", // Utilise le slug de rubrique cohérent
     body: "Contenu d'exemple.",
   },
   {
@@ -72,7 +72,7 @@ export const articles: Article[] = [
     publishedAt: "2025-08-07",
     author: "Rédaction IE",
     tags: ["Société", "Urbanisation"],
-    rubrique: "actualite-societe", // Utilise le slug de rubrique cohérent
+    rubrique: "analyse-situations", // Utilise le slug de rubrique cohérent
     body: "Contenu d'exemple.",
   },
   {
@@ -84,7 +84,7 @@ export const articles: Article[] = [
     publishedAt: "2025-08-05",
     author: "Rédaction IE",
     tags: ["BTP", "Infrastructures"],
-    rubrique: "batiment-travaux", // Utilise le slug de rubrique cohérent
+    rubrique: "interview", // Utilise le slug de rubrique cohérent
     body: "Contenu d'exemple.",
   },
   {
@@ -96,7 +96,7 @@ export const articles: Article[] = [
     publishedAt: "2025-08-03",
     author: "Rédaction IE",
     tags: ["Entrepreneuriat", "PME"],
-    rubrique: "entreprise-entreprenariat", // Utilise le slug de rubrique cohérent
+    rubrique: "plaidoyer", // Utilise le slug de rubrique cohérent
     body: "Contenu d'exemple.",
   },
 ];
