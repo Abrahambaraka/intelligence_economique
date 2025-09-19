@@ -21,8 +21,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
   
-  // Utilise le nom complet de la rubrique pour le titre de la page
-  const displayLabel = label.replace(/(^|\s)et(\s)/gi, "$1&$2");
+  // Utilise directement le label sans transformation
+  const displayLabel = label;
   
   return {
     title: `${displayLabel} - Intelligence Économique`,
@@ -51,8 +51,8 @@ export default async function RubriquePage({ params }: { params: Promise<{ slug:
     body: a.body,
     rubrique: a.rubriqueSlug ?? undefined,
   }));
-  // Libellé affiché: remplacer l'« et » isolé par « & »
-  const displayLabel = label.replace(/(^|\s)et(\s)/gi, "$1&$2");
+  // Utilise directement le label sans transformation
+  const displayLabel = label;
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
