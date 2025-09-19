@@ -3,6 +3,29 @@ import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { ArticleContent } from "@/components/ArticleContent";
 import { getBlurDataURL } from "@/lib/image-utils";
+import { getRubriqueLabel } from "@/lib/categories";
+import type { Metadata } from "next";
+
+// Génération des métadonnées pour améliorer les titres dans le navigateur
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const a = await prisma.article.findUnique({ where: { slug } });
+  
+  if (!a) {
+    return {
+      title: "Article non trouvé - Intelligence Économique",
+    };
+  }
+  
+  // Récupère le nom complet de la rubrique pour l'inclure dans le titre
+  const rubriqueLabel = getRubriqueLabel(a.rubriqueSlug ?? undefined);
+  const rubriqueText = rubriqueLabel ? ` - ${rubriqueLabel}` : "";
+  
+  return {
+    title: `${a.title}${rubriqueText} - Intelligence Économique`,
+    description: a.excerpt || `Lisez cet article sur Intelligence Économique`,
+  };
+}
 
 export default async function ArticleDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

@@ -19,6 +19,7 @@ export default async function ArticlesPage() {
     publishedAt: (a.publishedAt ?? a.createdAt).toISOString(),
     author: a.author ?? undefined,
     body: a.body,
+    rubrique: a.rubriqueSlug ?? undefined, // Ajouter la rubrique pour un affichage cohérent
   }));
 
   const [featured, ...rest] = articles;

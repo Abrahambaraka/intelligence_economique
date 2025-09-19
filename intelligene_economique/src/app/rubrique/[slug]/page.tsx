@@ -4,9 +4,30 @@ import { prisma } from "@/lib/prisma";
 import { RUBRIQUES, getRubriqueLabel } from "@/lib/categories";
 import { ArticleCard } from "@/components/ArticleCard";
 import type { Article } from "@/lib/types";
+import type { Metadata } from "next";
 
 export function generateStaticParams() {
   return RUBRIQUES.map((r) => ({ slug: r.slug }));
+}
+
+// Génération des métadonnées pour améliorer les titres dans le navigateur
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const label = getRubriqueLabel(slug);
+  
+  if (!label) {
+    return {
+      title: "Rubrique non trouvée - Intelligence Économique",
+    };
+  }
+  
+  // Utilise le nom complet de la rubrique pour le titre de la page
+  const displayLabel = label.replace(/(^|\s)et(\s)/gi, "$1&$2");
+  
+  return {
+    title: `${displayLabel} - Intelligence Économique`,
+    description: `Découvrez tous les articles de la rubrique ${displayLabel} sur Intelligence Économique`,
+  };
 }
 
 export default async function RubriquePage({ params }: { params: Promise<{ slug: string }> }) {

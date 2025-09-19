@@ -21,6 +21,7 @@ export default async function Home() {
     publishedAt: (a.publishedAt ?? a.createdAt).toISOString(),
     author: a.author ?? undefined,
     body: a.body,
+    rubrique: a.rubriqueSlug ?? undefined, // Ajouter la rubrique pour un affichage cohérent
   }));
   // Récupérer les magazines et vidéos depuis la base
   const mags = await prisma.magazine.findMany({

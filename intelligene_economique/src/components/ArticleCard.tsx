@@ -3,8 +3,12 @@ import Image from "next/image";
 import { Article } from "@/lib/types";
 import { formatDateFR } from "@/lib/utils";
 import { getBlurDataURL } from "@/lib/image-utils";
+import { getRubriqueLabel } from "@/lib/categories";
 
 export function ArticleCard({ a }: { a: Article }) {
+  // Utilise le label de rubrique complet si disponible, sinon category
+  const displayCategory = a.rubrique ? getRubriqueLabel(a.rubrique) : a.category;
+  
   return (
   <article className="rounded-lg overflow-hidden bg-white border border-neutral-200 hover:shadow-sm transition-shadow">
       {a.image && (
@@ -23,7 +27,7 @@ export function ArticleCard({ a }: { a: Article }) {
         </div>
       )}
       <div className="p-3 sm:p-4">
-        <p className="text-[10px] sm:text-xs uppercase text-neutral-500 mb-1">{a.category ?? ""}</p>
+        <p className="text-[10px] sm:text-xs uppercase text-neutral-500 mb-1">{displayCategory ?? ""}</p>
         <h3 className="font-semibold text-base sm:text-lg leading-snug mb-2 line-clamp-2">
           <Link href={`/articles/${a.slug}`} className="hover:underline hover:text-[var(--brand-600)]">
             {a.title}
@@ -37,6 +41,9 @@ export function ArticleCard({ a }: { a: Article }) {
 }
 
 export function FeaturedArticle({ a }: { a: Article }) {
+  // Utilise le label de rubrique complet si disponible, sinon category, sinon "À la Une"
+  const displayCategory = a.rubrique ? getRubriqueLabel(a.rubrique) : (a.category ?? "À la Une");
+  
   return (
   <article className="relative overflow-hidden rounded-xl bg-white border border-neutral-200 hover:shadow-sm transition-shadow">
       {a.image && (
@@ -55,7 +62,7 @@ export function FeaturedArticle({ a }: { a: Article }) {
         </div>
       )}
   <div className="p-4 sm:p-5">
-        <p className="text-[10px] sm:text-xs uppercase text-neutral-500 mb-1">{a.category ?? "À la Une"}</p>
+        <p className="text-[10px] sm:text-xs uppercase text-neutral-500 mb-1">{displayCategory}</p>
         <h2 className="text-xl sm:text-2xl font-bold leading-tight mb-2">
           <Link href={`/articles/${a.slug}`} className="hover:underline hover:text-[var(--brand-600)]">
             {a.title}
