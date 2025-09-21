@@ -32,6 +32,51 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.env.local
+.env.production
+.env.development
+.env.test
+
+# Bases de données sensibles
+*.db
+*.sqlite
+*.sqlite3
+dev.db
+prod.db
+production.db
+
+# Backups et archives
+backup/
+backups/
+*.backup
+*.bak
+*.tar.gz
+app-deploy.tar.gz
+temp-deploy/
+
+# Scripts de déploiement sensibles
+deploy-commands.sh
+install-commands.sh
+ecosystem.config.js.backup
+
+# Configuration serveur
+nginx-*.conf
+
+# Uploads utilisateurs
+uploads/
+public/uploads/
+
+# Clés et certificats
+*.key
+*.crt
+*.p12
+.ssh/
+
+# Cache et temporaires
+.tmp/
+*.tmp
+*.temp
+temp/
 
 # vercel
 .vercel
