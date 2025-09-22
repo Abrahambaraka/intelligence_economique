@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
+import crypto from "node:crypto";
 
 type DbMagazine = {
   id: string;
@@ -50,6 +51,29 @@ export async function GET(req: NextRequest) {
 
 // POST /api/magazines { title, issue, excerpt?, image?, pdfUrl? } — créer et publier un magazine
 export async function POST(req: NextRequest) {
+  // Vérification de l'authentification
+  const SESSION_SECRET = process.env.SESSION_SECRET || "dev-secret-change-me";
+  
+  function verify(cookie: string | undefined) {
+    if (!cookie) return null;
+    const [payloadBase64, sig] = cookie.split(".");
+    if (!payloadBase64 || !sig) return null;
+    const expected = crypto.createHmac("sha256", SESSION_SECRET).update(payloadBase64).digest("hex");
+    if (sig !== expected) return null;
+    try {
+      const payload = JSON.parse(Buffer.from(payloadBase64, "base64url").toString("utf8"));
+      if (typeof payload.exp === "number" && payload.exp < Math.floor(Date.now() / 1000)) return null;
+      return payload;
+    } catch {
+      return null;
+    }
+  }
+
+  const session = verify(req.cookies.get("ie_session")?.value);
+  if (!session || session.role !== "admin") {
+    return NextResponse.json({ ok: false, error: "Authentification requise" }, { status: 401 });
+  }
+
   const data = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const title = String(data["title"] || "").trim();
   const issue = String(data["issue"] || "").trim();

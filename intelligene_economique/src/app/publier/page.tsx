@@ -401,8 +401,13 @@ function MagazineForm({ onCreated }: { onCreated?: () => void }) {
           const payload = { title, issue, excerpt, image: coverUrl ?? undefined, pdfUrl: pdfUrl || pdfLink };
           const res = await fetch("/api/magazines", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
           const j = await res.json().catch(() => ({}));
-          if (!res.ok || !j?.ok) alert(j?.error || "Échec de la publication du magazine");
-          else if (onCreated) onCreated();
+          if (!res.ok || !j?.ok) {
+            // Si c'est une erreur 401 (non autorisé), lancer une erreur pour déclencher la redirection
+            if (res.status === 401) {
+              throw new Error("Authentication required");
+            }
+            alert(j?.error || "Échec de la publication du magazine");
+          } else if (onCreated) onCreated();
         } finally { setSaving(false); }
       }} />
     </form>
@@ -465,8 +470,13 @@ function VideoForm({ onCreated }: { onCreated?: () => void }) {
           const payload = { title, videoUrl: videoUrl || "", excerpt, image: undefined as string | undefined, duration };
           const res = await fetch("/api/videos", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
           const j = await res.json().catch(() => ({}));
-          if (!res.ok || !j?.ok) alert(j?.error || "Échec de la publication de la vidéo");
-          else if (onCreated) onCreated();
+          if (!res.ok || !j?.ok) {
+            // Si c'est une erreur 401 (non autorisé), lancer une erreur pour déclencher la redirection
+            if (res.status === 401) {
+              throw new Error("Authentication required");
+            }
+            alert(j?.error || "Échec de la publication de la vidéo");
+          } else if (onCreated) onCreated();
         } finally { setSaving(false); }
       }} />
     </form>
@@ -484,11 +494,17 @@ function PublishButton({ label, onPublish }: { label: string; onPublish?: () => 
         // À faire: procéder à l'enregistrement (non implémenté ici)
         alert("Authentifié: action de publication à brancher.");
       }
-    } catch (error) {
-      // Si l'erreur indique un problème d'authentification, rediriger
+    } catch (error: any) {
       console.error("Erreur:", error);
-      alert("Vous devez vous connecter pour publier. Vous allez être redirigé vers la page de connexion.\n\nCode par défaut: admin123");
-      window.location.href = "/admin?next=/publier";
+      
+      // Vérifier si l'erreur est spécifiquement liée à l'authentification
+      if (error?.status === 401 || error?.message?.includes('401') || error?.message?.includes('unauthorized')) {
+        alert("Vous devez vous connecter pour publier. Vous allez être redirigé vers la page de connexion.\n\nCode par défaut: admin123");
+        window.location.href = "/admin?next=/publier";
+      } else {
+        // Pour les autres erreurs, afficher le message d'erreur réel
+        alert(`Erreur lors de la publication: ${error?.message || 'Erreur inconnue'}`);
+      }
     } finally {
       setChecking(false);
     }
