@@ -37,6 +37,20 @@ export async function POST(req: NextRequest) {
   const sig = sign(payloadBase64);
   const cookieValue = `${payloadBase64}.${sig}`;
 
+  // Pour les requêtes JSON, retourner JSON avec cookie
+  if (contentType.includes("application/json")) {
+    const res = NextResponse.json({ ok: true, message: "Authentification réussie" });
+    res.cookies.set("ie_session", cookieValue, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 3600,
+      path: "/",
+    });
+    return res;
+  }
+
+  // Pour les requêtes FormData, rediriger
   const res = NextResponse.redirect(new URL(next, req.url));
   res.cookies.set("ie_session", cookieValue, {
     httpOnly: true,
