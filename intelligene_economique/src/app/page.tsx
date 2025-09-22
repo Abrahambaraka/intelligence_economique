@@ -5,6 +5,9 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { FeaturedCarousel } from "@/components/FeaturedCarousel";
 import type { Article } from "@/lib/types";
 
+// Forcer le rendu dynamique pour toujours avoir les derniers articles
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const dbList = await prisma.article.findMany({
     where: { status: "published" },
