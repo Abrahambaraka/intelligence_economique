@@ -11,8 +11,17 @@ function sign(payloadBase64: string) {
 export async function POST(req: NextRequest) {
   const url = new URL(req.url);
   const next = url.searchParams.get("next") || "/publier";
-  const form = await req.formData();
-  const code = String(form.get("code") || "").trim();
+  
+  let code = "";
+  const contentType = req.headers.get("content-type") || "";
+  
+  if (contentType.includes("application/json")) {
+    const json = await req.json();
+    code = String(json.code || "").trim();
+  } else {
+    const form = await req.formData();
+    code = String(form.get("code") || "").trim();
+  }
   if (!code) {
     return NextResponse.json({ ok: false, error: "Code requis" }, { status: 400 });
   }
