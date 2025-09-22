@@ -303,9 +303,14 @@ function ArticleForm({ onCreated }: { onCreated?: () => void }) {
           });
           const j = await res.json().catch(() => ({}));
           if (!res.ok || !j?.ok) {
+            // Si c'est une erreur 401 (non autorisé), lancer une erreur pour déclencher la redirection
+            if (res.status === 401) {
+              throw new Error("Authentication required");
+            }
             alert(j?.error || "Échec de la publication");
             return;
           }
+          alert("Article publié avec succès!");
           if (onCreated) onCreated();
         }}
       />
@@ -473,22 +478,17 @@ function PublishButton({ label, onPublish }: { label: string; onPublish?: () => 
   async function onClick() {
     setChecking(true);
     try {
-      const res = await fetch("/api/auth/session");
-      const j = await res.json();
-      if (!j?.admin) {
-        alert("Vous devez vous connecter pour publier. Vous allez être redirigé vers la page de connexion.\n\nCode par défaut: admin123");
-        window.location.href = "/admin?next=/publier";
-        return;
-      }
       if (onPublish) {
         await onPublish();
       } else {
-  // À faire: procéder à l'enregistrement (non implémenté ici)
+        // À faire: procéder à l'enregistrement (non implémenté ici)
         alert("Authentifié: action de publication à brancher.");
       }
     } catch (error) {
-      console.error("Erreur d'authentification:", error);
-      alert("Erreur de connexion. Veuillez réessayer ou vous reconnecter.");
+      // Si l'erreur indique un problème d'authentification, rediriger
+      console.error("Erreur:", error);
+      alert("Vous devez vous connecter pour publier. Vous allez être redirigé vers la page de connexion.\n\nCode par défaut: admin123");
+      window.location.href = "/admin?next=/publier";
     } finally {
       setChecking(false);
     }
