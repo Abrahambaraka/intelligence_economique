@@ -65,6 +65,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "Titre et contenu requis" }, { status: 400 });
   }
 
+  // Vérifier que la rubrique existe si elle est fournie
+  if (rubrique) {
+    const rubriqueExists = await prisma.rubrique.findUnique({ where: { slug: rubrique } });
+    if (!rubriqueExists) {
+      return NextResponse.json({ ok: false, error: `Rubrique "${rubrique}" non trouvée` }, { status: 400 });
+    }
+  }
+
   const slugBase = slugify(title);
   let slug = slugBase;
   // garantir un slug unique
@@ -81,7 +89,7 @@ export async function POST(req: NextRequest) {
       excerpt,
       body,
       image,
-      rubriqueSlug: rubrique,
+      rubriqueSlug: rubrique || null, // Utiliser null si pas de rubrique
       status: "published",
       publishedAt: new Date(),
     },

@@ -104,5 +104,5 @@ if ($attempts -ge $maxAttempts) {
     Write-Status "1. Vérifiez la configuration DNS dans votre panel Hostinger"
     Write-Status "2. Utilisez https://dnschecker.org pour vérifier la propagation"
     Write-Status "3. Une fois propagé, exécutez manuellement:"
-    Write-Status "   ssh $VPSUser@$ServerIP 'certbot --nginx -d $Domain -d www.$Domain --non-interactive --agree-tos --email admin@$Domain'"
+    Write-Status "   ssh user@195.35.3.36 'certbot --nginx -d intelligenceconomique.com --non-interactive --agree-tos --email admin@intelligenceconomique.com'"
 }
